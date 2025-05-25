@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>THE ONE</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            color: #0f0;
+            font-family: 'Consolas', monospace;
+        }
+        #background-text {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 7vw;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00fff7, #00ff00, #ff00ea, #fff700, #00fff7);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            letter-spacing: 1vw;
+            user-select: none;
+            z-index: 1;
+            animation: rgb-move 3s linear infinite;
+            text-shadow: none;
+        }
+        @keyframes rgb-move {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        #clock {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+            color: #0f0;
+            font-family: 'Consolas', monospace;
+            z-index: 3;
+            letter-spacing: 0.2em;
+            background: transparent;
+            padding: 0;
+            border: none;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            animation: none;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+        }
+        #menu-bar {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #0f0;
+            border-radius: 8px;
+            padding: 12px 32px;
+            z-index: 2;
+            display: flex;
+            gap: 32px;
+            box-shadow: 0 0 20px #0f0;
+        }
+        #menu-bar a {
+            color: #0f0;
+            text-decoration: none;
+            font-size: 1.3em;
+            transition: color 0.2s, transform 0.2s;
+        }
+        #menu-bar a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #0f0;
+            transform: scale(1.18);
+        }
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix"></canvas>
+    <div id="background-text">THE ONE</div>
+    <div id="clock">00:00</div>
+    <div id="menu-bar">
+        <a href="2index.html" target="_blank">juegos</a>
+        <a href="https://www.tiktok.com/@theone27091/" target="_blank">tiktok</a>
+        <a href="https://www.youtube.com/@SOMOSTHEONE" target="_blank">youtube</a>
+    </div>
+    <script>
+        // Matrix Rain Animation
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const fontSize = 22;
+        const columns = Math.floor(width / fontSize);
+        const drops = Array(columns).fill(1);
+
+        function randomKatakana() {
+            // Unicode Katakana range
+            return String.fromCharCode(0x30A0 + Math.random() * (0x30FF - 0x30A0));
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.font = fontSize + "px monospace";
+            ctx.fillStyle = '#0F0';
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = randomKatakana();
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if(drops[i] * fontSize > height && Math.random() > 0.975)
+                    drops[i] = 0;
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 40);
+
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        });
+
+        // Reloj digital en tiempo real sin bordes y solo color verde
+        function updateClock() {
+            const now = new Date();
+            let h = now.getHours();
+            let m = now.getMinutes();
+            h = h < 10 ? '0' + h : h;
+            m = m < 10 ? '0' + m : m;
+            document.getElementById('clock').textContent = `${h}:${m}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
